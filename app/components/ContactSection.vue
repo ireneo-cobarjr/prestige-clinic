@@ -4,7 +4,7 @@
       <div class="places">
         <Place
           place-name="Principe OB-GYN and Wellness Centre"
-          phone="+63 9 12 345 6789"
+          phone="0916 479 3432"
           email="dociceprincipe@gmail.com"
           fb-name="Principe Ob-Gyn"
           fb-link="https://www.facebook.com/dociceprincipe"
@@ -13,7 +13,7 @@
         <Place
           place-name="MeritCare Medical . Cardio . Ob-Gyn and Diagnostic Clinic"
           phone="0966 025 5868"
-          email="meritcare@gmail.com"
+          email="meritcareclinic01@gmail.com"
           fb-name="MeritCare Medical"
           fb-link="https://www.facebook.com/people/MeritCare-Medical-Cardio-Ob-Gyn-and-Diagnostic-Clinic/61581556880297/"
         />
