@@ -1,7 +1,10 @@
 <script setup>
-import { ref } from 'vue';
 import { VueDatePicker, WeekStart } from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
+
+const emits = defineEmits(['get-date']);
+
+const inputStatus = inject(BookingDialogFormInputStatusSetter);
 
 const maxDate = computed(() => {
   const d = new Date();
@@ -10,21 +13,47 @@ const maxDate = computed(() => {
 });
 
 const date = ref();
+
+const minSelectableDate = computed(() => {
+  if (isFridayinManila() && isPastFivePMInManila()) {
+    return getComingMondayInManila()
+  }
+
+  if (isPastFivePMInManila() && !isFridayinManila()) {
+    return getManilaTomorrow();
+  }
+  return new Date();
+});
+
+watch(date, (newDate) => {
+  emits('get-date', newDate);
+  inputStatus('date', !!newDate);
+});
+
+defineExpose({
+  reset: () => {
+    date.value = undefined;
+  },
+});
 </script>
 
 <template>
-  <VueDatePicker
-    v-model="date"
-    :min-date="new Date()"
-    :max-date="maxDate"
-    prevent-min-max-navigation
-    :filters="{ weekDays: [0, 6] }"
-    :time-config="{ enableTimePicker: false }"
-    :week-start="WeekStart.Sunday"
-    :formats="{ weekDay: 'EEEEE', input: 'MMM dd, yyyy - eee' }"
-    :ui="{ input: 'form-input' }"
-    inline
-  />
+  <clientOnly>
+    <VueDatePicker
+      v-model="date"
+      :inline="{ input: true }"
+      model-type="yyyy-MM-dd"
+      auto-apply
+      :min-date="minSelectableDate"
+      :max-date="maxDate"
+      prevent-min-max-navigation
+      :filters="{ weekDays: [0, 6] }"
+      :time-config="{ enableTimePicker: false }"
+      :week-start="WeekStart.Sunday"
+      :formats="{ weekDay: 'EEEEE', input: 'MMM dd, yyyy - eee' }"
+      :ui="{ input: 'form-input' }"
+    />
+  </clientOnly>
 </template>
 
 <style scoped>

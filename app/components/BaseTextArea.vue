@@ -8,10 +8,10 @@ const props = defineProps({
     type: Array,
     required: false,
   },
-  modelValue: [String, Number],
-  type: { type: String, default: 'text' },
+  modelValue: { type: String, default: '' },
   placeholder: { type: String, default: '' },
   label: { type: String, default: '' },
+  rows: { type: Number, default: 4 },
 })
 
 const emit = defineEmits(['update:modelValue', 'focus', 'blur']);
@@ -46,31 +46,31 @@ const onModelValueChange = (textValue) => {
 </script>
 
 <template>
-  <div class="base-input">
+  <div class="base-textarea">
     <label
       v-if="label"
       :for="id"
-      class="base-input__label"
+      class="base-textarea__label"
     >
       {{ label }}
     </label>
 
-    <input
+    <textarea
       :id="id"
-      :type="type"
+      :rows="rows"
       :placeholder="placeholder"
       :value="modelValue"
-      class="base-input__field"
+      class="base-textarea__field"
       :class="{ 'has-error': error }"
       @input="onModelValueChange($event.target.value)"
       @focus="emit('focus', $event)"
       @blur="emit('blur', $event)"
-    >
+    />
 
     <div style="height: 20px;">
       <p
         v-if="error"
-        class="base-input__error"
+        class="base-textarea__error"
       >
         {{ error }}
       </p>
@@ -79,39 +79,41 @@ const onModelValueChange = (textValue) => {
 </template>
 
 <style scoped>
-.base-input {
+.base-textarea {
   display: flex;
   flex-direction: column;
   gap: 0.25rem;
   width: 100%;
 }
 
-.base-input__label {
+.base-textarea__label {
   font-weight: 500;
   font-size: 0.875rem;
   color: #333;
 }
 
-.base-input__field {
+.base-textarea__field {
   padding: 0.5rem 0.75rem;
   border: 1px solid #ccc;
   border-radius: 0.375rem;
   font-size: 1rem;
+  font-family: inherit;
+  resize: vertical;
   transition: border-color 0.2s, box-shadow 0.2s;
 }
 
-.base-input__field:focus {
+.base-textarea__field:focus {
   border-color: black;
   box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
   outline: none;
 }
 
 /* error state */
-.base-input__field.has-error {
+.base-textarea__field.has-error {
   border-color: #dc2626;
 }
 
-.base-input__error {
+.base-textarea__error {
   font-size: 0.75rem;
   color: #dc2626;
   margin-top: 0.125rem;

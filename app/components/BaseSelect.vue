@@ -14,12 +14,6 @@
       @blur="emit('blur', $event)"
     >
       <option
-        disabled
-        value=""
-      >
-        {{ placeholder }}
-      </option>
-      <option
         v-for="(option, index) in options"
         :key="index"
         :value="option.value"
@@ -32,12 +26,9 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
-
-const props = defineProps({
+defineProps({
   modelValue: [String, Number],
   options: { type: Array, default: () => [] }, // [{ label: 'Option 1', value: '1', disabled: true }]
-  placeholder: { type: String, default: 'Select an option' },
   label: { type: String, default: '' },
   id: { type: String, default: () => `select-${Math.random().toString(36).substr(2, 9)}` },
 })

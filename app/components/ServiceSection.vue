@@ -2,6 +2,9 @@
 const emits = defineEmits<{
   (e: 'book-appointment'): void
 }>();
+
+const serviceList = services();
+// const a = getServicesMenu();
 </script>
 
 <template>
@@ -15,72 +18,26 @@ const emits = defineEmits<{
         style="border-top-left-radius: 8px; border-top-right-radius: 8px; background-color: white;"
       >
         <h2 class="text-center">
-          OB-GYN Services
+          {{ serviceList.ob.name }}
         </h2>
       </div>
       <div class="services px-4 pb-5 mb-5">
-        <div class="card p-4">
+        <div
+          v-for="obServices in serviceList.ob.sub"
+          :key="obServices.name"
+          class="card p-4"
+        >
           <div>
             <h5 class="primary mb-3">
-              Consultations & Care
+              {{ obServices.name }}
             </h5>
             <ul>
-              <li>OB-Gyne Consultation</li>
-              <li>Pre- & Post-Natal Check-up</li>
-              <li>Prenatal Care</li>
-              <li>Pregnancy Planning</li>
-              <li>Childbirth (Normal / CS)</li>
-              <li>Menopause Care</li>
-              <li>Menstrual Health</li>
-              <li>Family Planning</li>
-              <li>Vaginal Infections</li>
-              <li>Well-Woman Check-up</li>
-            </ul>
-          </div>
-          <button
-            class="bg-primary px-4 py-2 mt-4 button width-full"
-            @click="emits('book-appointment')"
-          >
-            Book an Appointment
-          </button>
-        </div>
-
-        <div class="card p-4">
-          <div>
-            <h5 class="primary mb-3">
-              Procedures
-            </h5>
-            <ul>
-              <li>Pap Smear (results in 3 days)</li>
-              <li>D&C (Raspa)</li>
-              <li>IUD Insertion</li>
-              <li>Implant Removal</li>
-              <li>General Pelvic Surgery</li>
-              <li>Myoma / Ovarian Mass Management</li>
-            </ul>
-          </div>
-          <button
-            class="bg-primary px-4 py-2 mt-4 button width-full"
-            @click="emits('book-appointment')"
-          >
-            Book an Appointment
-          </button>
-        </div>
-
-        <div class="card p-4">
-          <div>
-            <h5 class="primary mb-3">
-              OB-Focused Ultrasound
-            </h5>
-            <ul>
-              <li>Pelvic Ultrasound</li>
-              <li>TVS (Transvaginal Sonography)</li>
-              <li>Transrectal Ultrasound</li>
-              <li>Follicle Monitoring</li>
-              <li>Biophysical Scoring with Biometry</li>
-              <li>Fetal Doppler / Placental Doppler</li>
-              <li>3D Ultrasound</li>
-              <li>4D Ultrasound</li>
+              <li
+                v-for="item in obServices.items"
+                :key="item"
+              >
+                {{ item }}
+              </li>
             </ul>
           </div>
           <button
@@ -98,99 +55,29 @@ const emits = defineEmits<{
       style="gap:10px"
     >
       <div
+        v-for="otherService in serviceList.others"
+        :key="otherService.name"
         class="card flex-by-2 p-4 card-bottom-right-decor"
         style="height: 340px;"
       >
         <div>
           <h5 class="primary mb-3">
-            Cardiology Services
+            {{ otherService.name }}
           </h5>
           <ul>
-            <li>Cardiology Check-up</li>
-            <li>CP Clearance</li>
-            <li>Cardiac Diagnostics</li>
-            <li>ECG Testing</li>
-            <li>2D Echocardiogram</li>
-            <li>2D Echo with Doppler Studies</li>
+            <li
+              v-for="item in otherService.items"
+              :key="item"
+            >
+              {{ item }}
+            </li>
           </ul>
         </div>
         <Icon
           class="card-bottom-right-decor-content"
-          size="2.7em"
-          name="line-md:heart-filled"
+          :size="otherService.iconSize"
+          :name="otherService.icon"
         />
-      </div>
-      <div
-        class="card flex-by-2 p-4 card-bottom-right-decor"
-        style="height: 340px;"
-      >
-        <div>
-          <h5 class="primary mb-3">
-            Wellness
-          </h5>
-          <ul>
-            <li>Wellness Program</li>
-            <li>Weight Management</li>
-            <li>Weight-Loss Management</li>
-            <li>Anti-Aging Program</li>
-            <li>Immunization</li>
-            <li>Laboratory Results Interpretation</li>
-            <li>Ultrasound Results Interpretation</li>
-          </ul>
-          <Icon
-            class="card-bottom-right-decor-content"
-            size="3em"
-            name="material-symbols-light:digital-wellbeing"
-          />
-        </div>
-      </div>
-      <div
-        class="card flex-by-2 p-4 card-bottom-right-decor"
-        style="height: 340px;"
-      >
-        <div>
-          <h5 class="primary mb-3">
-            Laboratory Tests
-          </h5>
-          <ul>
-            <li>Complete Blood Count (CBC)</li>
-            <li>Liver Function Test (LFT)</li>
-            <li>Renal Function Test (RFT)</li>
-            <li>Thyroid Function Test (TFT)</li>
-            <li>Electrolytes</li>
-            <li>Blood Typing</li>
-            <li>Blood Biochemistry Tests</li>
-            <li>General Laboratory Services</li>
-          </ul>
-          <Icon
-            class="card-bottom-right-decor-content"
-            size="3em"
-            name="raphael:lab"
-          />
-        </div>
-      </div>
-      <div
-        class="card flex-by-2 p-4 card-bottom-right-decor"
-        style="height: 340px;"
-      >
-        <div>
-          <h5 class="primary mb-3">
-            Ultrasound & Imaging Services
-          </h5>
-          <ul>
-            <li>General Ultrasound</li>
-            <li>Whole Abdominal UTZ</li>
-            <li>Breast Ultrasound</li>
-            <li>Prostate Ultrasound</li>
-            <li>KUB (Kidneys, Ureters, Bladder)</li>
-            <li>Scrotal / Inguinal Ultrasound</li>
-          </ul>
-          <Icon
-            class="card-bottom-right-decor-content"
-            size="2.7em"
-            name="line-md:computer-filled"
-          />
-        </div>
       </div>
     </div>
   </div>
