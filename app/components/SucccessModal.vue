@@ -14,7 +14,7 @@ function formatLocalDate(dateString: string) {
   const [year, month, day] = dateString.split('-').map(Number);
 
   // Create a date object (Note: months are 0-indexed in JS, so subtract 1)
-  const date = new Date(year, month - 1, day);
+  const date = new Date((year as number), (month as number) - 1, day);
 
   // Use Intl.DateTimeFormat for high-quality localization
   const monthName = date.toLocaleString('en-US', { month: 'long' });

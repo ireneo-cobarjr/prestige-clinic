@@ -83,7 +83,7 @@ const reset = () => {
 
 const getUnavailableTimes = async (dateString: string) => {
   unavailableTimes.value = await $fetch('/api/bookings/check', {
-    query: { date: booking.value.date },
+    query: { date: dateString },
   });
 };
 
@@ -112,7 +112,7 @@ const showConflictMessage = ref(false);
 const submitBooking = async () => {
   try {
     loading.value = true;
-    const response = await $fetch('/api/bookings', {
+    await $fetch('/api/bookings', {
       method: 'POST',
       body: booking.value,
     })
@@ -121,7 +121,7 @@ const submitBooking = async () => {
     close();
   }
   catch (err: unknown) {
-    if (err.statusCode === 409) {
+    if ((err as { statusCode?: number }).statusCode === 409) {
       await getUnavailableTimes(booking.value.date);
       showConflictMessage.value = true;
       booking.value.time = '';

@@ -9,4 +9,4 @@ const client = postgres(connectionString, {
   ssl: process.env.NODE_ENV === 'production' ? 'require' : false,
 })
 
-export const db = drizzle(client)
+export const db = drizzle(client);

@@ -16,7 +16,7 @@ const props = defineProps({
 
 const emit = defineEmits(['update:modelValue', 'focus', 'blur']);
 
-const inputStatus = inject(BookingDialogFormInputStatusSetter);
+const inputStatus = inject(BookingDialogFormInputStatusSetter, () => {});
 
 /* simple error handling */
 const error = ref('');
