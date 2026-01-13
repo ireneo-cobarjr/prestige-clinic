@@ -41,7 +41,7 @@ export const sanitizeText = (text: string): string => {
     .replace(/'/g, '&#39;'); // Escape single quotes
 };
 
-const toTitleCase = phrase =>
+export const toTitleCase = phrase =>
   phrase.replace(/\b(\w)(\w*)/g, (_, first, rest) =>
     first.toUpperCase() + rest.toLowerCase(),
   );
