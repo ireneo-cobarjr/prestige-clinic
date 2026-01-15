@@ -26,7 +26,7 @@ export default defineNuxtConfig({
   routeRules: {
     '/': { prerender: true },
     '/login': { prerender: true },
-    // '/admin': { swr: true },
+    '/book-appointment': { prerender: true },
   },
   compatibilityDate: '2025-07-15',
   eslint: {

@@ -47,7 +47,6 @@ defineExpose({
       :min-date="minSelectableDate"
       :max-date="maxDate"
       prevent-min-max-navigation
-      :filters="{ weekDays: [0, 6] }"
       :time-config="{ enableTimePicker: false }"
       :week-start="WeekStart.Sunday"
       :formats="{ weekDay: 'EEEEE', input: 'MMM dd, yyyy - eee' }"

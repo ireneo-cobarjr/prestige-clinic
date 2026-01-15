@@ -9,17 +9,10 @@ useSeoMeta({
 });
 
 const bookingModal = useTemplateRef('bookingModal');
-const successModal = useTemplateRef('successModal');
 
 const openBookingModal = () => {
   if (bookingModal.value) {
     bookingModal.value.open();
-  }
-}
-
-const openSuccessModal = (bookingData: { date: string, time: string }) => {
-  if (successModal.value) {
-    successModal.value.open(bookingData);
   }
 }
 </script>
@@ -41,6 +34,5 @@ const openSuccessModal = (bookingData: { date: string, time: string }) => {
       ref="bookingModal"
       @booked="openSuccessModal"
     />
-    <SucccessModal ref="successModal" />
   </div>
 </template>

@@ -1,7 +1,5 @@
 <script setup lang="ts">
-const emits = defineEmits<{
-  (e: 'book-appointment'): void
-}>();
+const router = useRouter();
 </script>
 
 <template>
@@ -26,7 +24,7 @@ const emits = defineEmits<{
       <button
         class="bg-primary px-4 py-2 mt-4 button width-full"
         style="font-size: 1.5em;"
-        @click="emits('book-appointment')"
+        @click="router.push('/book-appointment')"
       >
         Book an Appointment
       </button>

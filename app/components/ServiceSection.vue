@@ -1,8 +1,5 @@
 <script setup lang="ts">
-const emits = defineEmits<{
-  (e: 'book-appointment'): void
-}>();
-
+const router = useRouter();
 const serviceList = services();
 // const a = getServicesMenu();
 </script>
@@ -42,7 +39,7 @@ const serviceList = services();
           </div>
           <button
             class="bg-primary px-4 py-2 mt-4 button width-full"
-            @click="emits('book-appointment')"
+            @click="router.push('book-appointment')"
           >
             Book an Appointment
           </button>
