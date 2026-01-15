@@ -22,7 +22,7 @@ const submit = async () => {
   }
   catch (e) {
     errorMsg.value = e.response.statusText;
-    console.log(errorMsg.value);
+    console.log(123, errorMsg.value);
   }
 };
 </script>
