@@ -42,9 +42,16 @@ const itemsToShow = computed(() => {
         </Carousel>
       </clientOnly>
       <div
-        class="px-4 py-5"
+        class="px-4 pb-5"
         style="text-align: center;"
       >
+        <hr
+          class="mb-5 mt-3"
+          style="border: 1px solid #d1d1d1;"
+        >
+        <h4 class="primary mb-3">
+          About our Program
+        </h4>
         <p class="mb-4">
           This dual-action medications which has several types according to our patients need po that acts effectively on weigltloss/ fat loss, without muscle wasting.
           It has an Imported Formula, Dual Action for Better Results!
@@ -68,7 +75,3 @@ const itemsToShow = computed(() => {
     </div>
   </div>
 </template>
-
-<style>
-
-</style>
