@@ -64,7 +64,7 @@ const itemsToShow = computed(() => {
           Its not Like the other weight loss medication wherein most if not all patients experience insomia, palpitation, headache, severe vomiting etc.
         </p>
         <p class="mb-4">
-          Each injection is priced at ₱2,800. Many of our clients choose to avail the vial, as it offers a more practical and convenient option overall.
+          Each injection is priced at ₱2,500. Many of our clients choose to avail the vial, as it offers a more practical and convenient option overall.
         </p>
         <p class="mb-4">
           Be cautious of unverified online products—many lack proper safety certification.
