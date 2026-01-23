@@ -1,202 +1,9 @@
-<template>
-  <ClientOnly>
-    <div class="bookings-table-wrapper">
-      <!-- Table -->
-      <div
-        v-if="pending"
-        class="loading-screen"
-      >
-        <Loader />
-      </div>
-      <DeleteBookingsModal
-        ref="deleteModal"
-        @confirm="deleteBookings"
-      />
-      <div style="display: flex; justify-content: space-between; align-items: center;">
-        <div
-          class="filters-section px-5 py-2 mb-2 font-secondary"
-          style="font-size: 0.8em;"
-        >
-          <button
-            :class="{ 'active-filter': Object.keys(filters).length === 0 }"
-            @click="showAll"
-          >
-            All
-          </button>
-          <button
-            :class="{ 'active-filter': 'date' in filters }"
-            @click="showToday"
-          >
-            Today
-          </button>
-          <button
-            :class="{ 'active-filter': 'startDate' in filters && 'endDate' in filters }"
-            @click="showThisWeek"
-          >
-            This week
-          </button>
-        </div>
-        <button
-          class="negative-btn font-secondary px-4 py-1"
-          :disabled="selectedRows.length === 0"
-          @click="showDeleteModal"
-        >
-          Delete
-        </button>
-      </div>
-      <table
-        class="bookings-table mb-3"
-      >
-        <thead>
-          <tr>
-            <th
-              class="pl-5 bg-primary"
-              style="min-width: 221px;"
-            >
-              Service Date
-            </th>
-            <th
-              class="bg-primary"
-              style="min-width: 243px;"
-            >
-              Service
-            </th>
-            <th
-              class="bg-primary"
-              style="min-width: 240px;"
-            >
-              Patient
-            </th>
-            <th
-              class="bg-primary"
-              style="min-width: 252px;"
-            >
-              Contact info
-            </th>
-            <th
-              class="bg-primary"
-              style="min-width: 150px;"
-            >
-              Sched Status
-            </th>
-            <th class="pr-5 bg-primary">
-              Delete
-            </th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <tr
-            v-for="row in rows"
-            :key="row.id"
-            :class="['font-secondary', { 'expired-row': isBookingPastPH(row.date, row.time) }]"
-            @click="onRowClick(row)"
-          >
-            <td class="pl-5">
-              <div>
-                <div>{{ formatDate(row.date) }}</div>
-                <div>{{ formatTime(row.time) }}</div>
-              </div>
-            </td>
-            <td>{{ row.service }}</td>
-            <td>
-              <div>
-                <div>{{ `${row.firstName} ${row.lastName}` }}</div>
-              </div>
-            </td>
-            <td>
-              <div>
-                <div>{{ `${row.email}` }}</div>
-                <div>{{ `${row.phoneNumber}` }}</div>
-              </div>
-            </td>
-            <td>
-              {{ `${isBookingPastPH(row.date, row.time) ? 'Expired' : 'Upcoming'}` }}
-            </td>
-            <td class="text-center pl-5 pr-5">
-              <input
-                type="checkbox"
-                :value="row.id"
-                :checked="selectedRows.includes(row.id)"
-                @click.stop="checkboxTicked(row.id)"
-              >
-            </td>
-          </tr>
-          <tr v-if="rows.length === 0">
-            <td
-              style="text-align: center;"
-              colspan="6"
-              class="no-data"
-            >
-              {{ 'No data' }}
-            </td>
-          </tr>
-        </tbody>
-      </table>
-
-      <!-- Pagination controls -->
-      <div class="pagination-container">
-        <div class="pagination-info">
-          <small class="font-secondary">
-            Showing {{ (page - 1) * pageSize + 1 }}
-            to {{ Math.min(page * pageSize, totalRows) }}
-            of {{ totalRows }} Bookings
-          </small>
-        </div>
-
-        <div class="pagination-buttons font-secondary">
-          <button
-            v-if="page > 1"
-            @click="goToPage(page - 1)"
-          >
-            <Icon
-              size="2em"
-              name="heroicons:chevron-left-16-solid"
-            />
-          </button>
-
-          <small><span>Page {{ page }} of {{ totalPages }}</span></small>
-
-          <button
-            v-if="page < totalPages"
-            @click="goToPage(page + 1)"
-          >
-            <Icon
-              size="2em"
-              name="heroicons:chevron-right-16-solid"
-            />
-          </button>
-        </div>
-
-        <div class="page-size-selector">
-          <label
-            class="font-secondary"
-            for="page-size"
-          ><small>Rows per page: </small></label>
-          <select
-            id="page-size"
-            v-model.number="pageSize"
-            class="ml-3"
-            @change="onPageSizeChange"
-          >
-            <option
-              v-for="size in pageSizeOptions"
-              :key="size"
-              :value="size"
-            >
-              {{ size }}
-            </option>
-          </select>
-        </div>
-      </div>
-    </div>
-  </ClientOnly>
-</template>
-
 <script setup>
 import DeleteBookingsModal from './DeleteBookingsModal.vue'
 
-const emit = defineEmits(['booking-selected', 'bookings-loading'])
+const emit = defineEmits(['booking-selected', 'bookings-loading']);
+
+const tableRef = useTemplateRef('bookings-table');
 
 // Reactive state
 const rows = ref([])
@@ -348,11 +155,241 @@ const formatDate = (dateStr) => {
   });
 }
 
+const downloadTable = async () => {
+  try {
+    pending.value = true;
+    const png = await captureTable(tableRef.value)
+
+    const a = document.createElement('a')
+    a.href = png
+    a.download = 'bookins.png'
+    a.click()
+  }
+  catch (e) {
+    console.error(e);
+  }
+  finally {
+    pending.value = false;
+  }
+};
+
 // Initial fetch
 onMounted(() => {
   fetchBookings()
 })
 </script>
+
+<template>
+  <ClientOnly>
+    <div class="bookings-table-wrapper">
+      <div
+        class="mb-2"
+        style="display: flex; justify-content: space-between;"
+      >
+        <h4>Bookings</h4>
+        <button
+          class="bg-primary px-4 py-1 font-secondary"
+          style="width: 100%; border-radius: 8px; width: 136px; display: flex; justify-content: center;"
+          :disabled="pending"
+          @click="downloadTable"
+        >
+          Download
+        </button>
+      </div>
+
+      <!-- Table -->
+      <div
+        v-if="pending"
+        class="loading-screen"
+      >
+        <Loader />
+      </div>
+      <DeleteBookingsModal
+        ref="deleteModal"
+        @confirm="deleteBookings"
+      />
+      <div style="display: flex; justify-content: space-between; align-items: center;">
+        <div
+          class="filters-section px-5 py-2 mb-2 font-secondary"
+          style="font-size: 0.8em;"
+        >
+          <button
+            :class="{ 'active-filter': Object.keys(filters).length === 0 }"
+            @click="showAll"
+          >
+            All
+          </button>
+          <button
+            :class="{ 'active-filter': 'date' in filters }"
+            @click="showToday"
+          >
+            Today
+          </button>
+          <button
+            :class="{ 'active-filter': 'startDate' in filters && 'endDate' in filters }"
+            @click="showThisWeek"
+          >
+            This week
+          </button>
+        </div>
+        <button
+          class="negative-btn font-secondary px-4 py-1"
+          style="width: 136px;"
+          :disabled="selectedRows.length === 0"
+          @click="showDeleteModal"
+        >
+          Delete
+        </button>
+      </div>
+      <table
+        ref="bookings-table"
+        class="bookings-table mb-3"
+      >
+        <thead>
+          <tr>
+            <th
+              class="pl-5 bg-primary"
+              style="min-width: 221px;"
+            >
+              Service Date
+            </th>
+            <th
+              class="bg-primary"
+              style="min-width: 243px;"
+            >
+              Service
+            </th>
+            <th
+              class="bg-primary"
+              style="min-width: 240px;"
+            >
+              Patient
+            </th>
+            <th
+              class="bg-primary"
+              style="min-width: 252px;"
+            >
+              Contact info
+            </th>
+            <th
+              class="bg-primary"
+              style="min-width: 150px;"
+            >
+              Sched Status
+            </th>
+            <th class="pr-5 bg-primary">
+              Delete
+            </th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr
+            v-for="row in rows"
+            :key="row.id"
+            :class="['font-secondary', { 'expired-row': isBookingPastPH(row.date, row.time) }]"
+            @click="onRowClick(row)"
+          >
+            <td class="pl-5">
+              <div>
+                <div>{{ formatDate(row.date) }}</div>
+                <div>{{ formatTime(row.time) }}</div>
+              </div>
+            </td>
+            <td>{{ row.service }}</td>
+            <td>
+              <div>
+                <div>{{ `${row.firstName} ${row.lastName}` }}</div>
+              </div>
+            </td>
+            <td>
+              <div>
+                <div>{{ `${row.email}` }}</div>
+                <div>{{ `${row.phoneNumber}` }}</div>
+              </div>
+            </td>
+            <td>
+              {{ `${isBookingPastPH(row.date, row.time) ? 'Expired' : 'Upcoming'}` }}
+            </td>
+            <td class="text-center pl-5 pr-5">
+              <input
+                type="checkbox"
+                :value="row.id"
+                :checked="selectedRows.includes(row.id)"
+                @click.stop="checkboxTicked(row.id)"
+              >
+            </td>
+          </tr>
+          <tr v-if="rows.length === 0">
+            <td
+              style="text-align: center;"
+              colspan="6"
+              class="no-data"
+            >
+              {{ 'No data' }}
+            </td>
+          </tr>
+        </tbody>
+      </table>
+
+      <!-- Pagination controls -->
+      <div class="pagination-container">
+        <div class="pagination-info">
+          <small class="font-secondary">
+            Showing {{ (page - 1) * pageSize + 1 }}
+            to {{ Math.min(page * pageSize, totalRows) }}
+            of {{ totalRows }} Bookings
+          </small>
+        </div>
+
+        <div class="pagination-buttons font-secondary">
+          <button
+            v-if="page > 1"
+            @click="goToPage(page - 1)"
+          >
+            <Icon
+              size="2em"
+              name="heroicons:chevron-left-16-solid"
+            />
+          </button>
+
+          <small><span>Page {{ page }} of {{ totalPages }}</span></small>
+
+          <button
+            v-if="page < totalPages"
+            @click="goToPage(page + 1)"
+          >
+            <Icon
+              size="2em"
+              name="heroicons:chevron-right-16-solid"
+            />
+          </button>
+        </div>
+
+        <div class="page-size-selector">
+          <label
+            class="font-secondary"
+            for="page-size"
+          ><small>Rows per page: </small></label>
+          <select
+            id="page-size"
+            v-model.number="pageSize"
+            class="ml-3"
+            @change="onPageSizeChange"
+          >
+            <option
+              v-for="size in pageSizeOptions"
+              :key="size"
+              :value="size"
+            >
+              {{ size }}
+            </option>
+          </select>
+        </div>
+      </div>
+    </div>
+  </ClientOnly>
+</template>
 
 <style lang="scss" scoped>
 .filters-section  {
@@ -379,8 +416,10 @@ onMounted(() => {
   color: white;
   border-radius: 8px;
   transition: 0.25s linear;
+}
 
-  &:disabled {
+button {
+    &:disabled {
     cursor: not-allowed;
     opacity: 0.6;
   }

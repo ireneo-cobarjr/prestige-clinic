@@ -99,9 +99,6 @@ const logout = async () => {
         style="border: 1px solid #ddd;"
       >
       <div v-if="activeTab === 'bookings'">
-        <h4 class="mb-5">
-          Bookings
-        </h4>
         <div
           v-if="loading"
           class="loading-screen"
