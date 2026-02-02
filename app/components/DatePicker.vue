@@ -12,6 +12,10 @@ const maxDate = computed(() => {
   return d;
 });
 
+const filters = ref({
+  weekDays: [0],
+});
+
 const date = ref();
 
 const minSelectableDate = computed(() => {
@@ -47,6 +51,7 @@ defineExpose({
       :min-date="minSelectableDate"
       :max-date="maxDate"
       prevent-min-max-navigation
+      :filters="filters"
       :time-config="{ enableTimePicker: false }"
       :week-start="WeekStart.Sunday"
       :formats="{ weekDay: 'EEEEE', input: 'MMM dd, yyyy - eee' }"

@@ -25,6 +25,7 @@ const openBookingModal = () => {
     />
     <IntegritySection class="my-5" />
     <WeightLossSection class="my-5" />
+    <Schedules />
     <ServiceSection
       class="my-5"
       @book-appointment="openBookingModal"

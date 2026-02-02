@@ -34,7 +34,7 @@ const itemsToShow = computed(() => {
           :items-to-show="itemsToShow"
         >
           <Slide
-            v-for="slide in 10"
+            v-for="slide in 12"
             :key="slide"
           >
             <div :style="['width: 300px; height: 700px;', `background-image: url(/images/testimonial-wl-${slide}.jpeg); background-position: center; background-size: contain; background-repeat: no-repeat`]" />
